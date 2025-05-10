@@ -6,9 +6,12 @@ mod fns;
 mod tray;
 
 use tauri::Manager;
+use tauri_plugin_deep_link::DeepLinkExt;
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             command::init,
@@ -17,6 +20,10 @@ fn main() {
         .plugin(tauri_nspanel::init())
         .setup(|app| {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
+            app.deep_link().on_open_url(|event| {
+                println!("Deep link URLs: {:?}", event.urls());
+            });
 
             use tauri_plugin_global_shortcut::{
                 Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState,

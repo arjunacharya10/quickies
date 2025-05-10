@@ -1,11 +1,12 @@
 // pages/Login.tsx
 import { supabase } from "@/lib/supabase";
+import { handleLinkClick } from "@/lib/utils";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AppleSignin from "./login/AppleSignin";
 import EmailForm from "./login/EmailForm";
 import { FormMessage } from "./login/form-message";
 import GoogleSigning from "./login/GoogleSignin";
-import { handleLinkClick } from "@/lib/utils";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,16 +35,16 @@ const Login = () => {
   };
 
   const handleAppleSignin = async () => {
-    const origin = window.location.origin;
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "apple",
       options: {
-        redirectTo: `${origin}/auth/callback`,
+        skipBrowserRedirect: true,
+        redirectTo: `https://web.thinkerapp.org/auth/forward`,
       },
     });
 
     if (data.url) {
-      return navigate(data.url); // use the redirect API for your server framework
+      await openUrl(data.url); // use the redirect API for your server framework
     } else {
       return navigate(
         `/login?message=Couldn't authenticate user&error=${error?.message}`
@@ -52,18 +53,16 @@ const Login = () => {
   };
 
   const handleGoogleSignin = async () => {
-    "use server";
-
-    const origin = window.location.origin;
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${origin}/auth/callback`,
+        skipBrowserRedirect: true,
+        redirectTo: `https://web.thinkerapp.org/auth/forward`,
       },
     });
 
     if (data.url) {
-      return navigate(data.url); // use the redirect API for your server framework
+      await openUrl(data.url); // use the redirect API for your server framework
     } else {
       return navigate(
         `/login?message=Couldn't authenticate user&error=${error?.message}`

@@ -3,7 +3,13 @@
   "productName": "quickies",
   "version": "0.1.0",
   "identifier": "org.thinkerapp.quickies",
-  "plugins": {},
+  "plugins": {
+    "deep-link":{
+      "desktop": {
+        "schemes": ["quickies"]
+      }
+    }
+  },
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
