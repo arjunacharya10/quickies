@@ -1,14 +1,14 @@
-import { Info, Settings } from "lucide-react";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/AuthContext";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useAuth } from "@/lib/AuthContext";
+import { supabase } from "@/lib/supabase";
+import { Info, Settings } from "lucide-react";
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 export default function Home() {
   const { user } = useAuth();
@@ -50,7 +50,7 @@ export default function Home() {
         <p className="text-sm font-bold text-[#ffde59]">Thinker Quickie</p>
         <div className="flex flex-row justify-around items-center gap-2">
           <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger tabIndex={-1}>
               <Info width={16} height={16} />
             </PopoverTrigger>
             <PopoverContent className="text-xs">
@@ -59,7 +59,7 @@ export default function Home() {
             </PopoverContent>
           </Popover>
           <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger tabIndex={-1}>
               <Settings width={16} height={16} />
             </PopoverTrigger>
             <PopoverContent className="text-xs">
@@ -78,6 +78,7 @@ export default function Home() {
       </div>
       <Textarea
         onChange={(e) => setQuickieText(e.target.value)}
+        autoFocus
         value={quickieText}
         placeholder="Start typing ..."
         className="w-full h-full mt-2 mb-2 border-0 resize-none overflow-auto text-sm"
@@ -90,7 +91,7 @@ export default function Home() {
         )}
         <Button
           onClick={addQuickie}
-          disabled={loading}
+          disabled={loading || quickieText.length < 1}
           size={"sm"}
           variant={"default"}
           className="cursor-pointer"
