@@ -5,11 +5,14 @@ import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import { useDeepLinkHandler } from "./hooks/useDeepLinkHandler";
 
 function App() {
   useEffect(() => {
     invoke("init");
   }, []);
+
+  useDeepLinkHandler();
 
   return (
     <main className="block border-1 border-neutral-600 rounded-lg h-[400px] w-[350px]">
